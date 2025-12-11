@@ -10,7 +10,7 @@ G.Add("Text", "w200 h40", "Press LT and RT to control the vibration motors.")
 E := G.Add("Edit", "w200 h200 +ReadOnly")
 G.Show()
 
-`::ExitApp
+F10::ExitApp
 NumBefore := -1
 Num := 1
 LSOn := 0

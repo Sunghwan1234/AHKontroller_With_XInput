@@ -6,6 +6,7 @@ Window.Add("Text", "w300", "Note: For Xbox controller 2013 and newer (anything n
 tDisplay := Window.Add("Edit", "w300 h50 +ReadOnly")
 tDisplay2 := Window.Add("Edit","w300 h80 +ReadOnly")
 
+ControllerNumber := 0
 ; Auto-detect the controller number if called for:
 if ControllerNumber <= 0
 {
