@@ -31,12 +31,12 @@ class ControllerGUI {
 
         this.uLStickcX := gbX+28
         this.uLStickcY := gbY+50
-        this.uLStick := Window.AddText("xs+28 ys+50 w" this.uStickW " h" this.uStickH " BackgroundTrans","○")
+        this.uLStick := Window.AddText("xs+28 ys+50 w" this.uStickW " h" this.uStickH " BackgroundTrans","◎")
         this.uLStick.SetFont("s20")
 
         this.uRStickcX := gbX+190-60
         this.uRStickcY := gbY+60+20
-        this.uRStick := Window.AddText("xs+140 ys+70 w" this.uStickW " h" this.uStickH " BackgroundTrans","○")
+        this.uRStick := Window.AddText("xs+140 ys+70 w" this.uStickW " h" this.uStickH " BackgroundTrans","◎")
         this.uRStick.SetFont("s20")
 
         ; Buttons
@@ -79,7 +79,13 @@ class ControllerGUI {
         LC := State.wButtons & XINPUT_GAMEPAD_LEFT_THUMB
         RC := State.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB
         All := State.wButtons
-        tDisplay.Value .= "Controller " (this.id+1) ": " All " |LX" State.sThumbLX " LY" State.sThumbLY " |RX" State.sThumbRX " RY" State.sThumbRY "`n" 
+
+        StickLX := Floor(State.sThumbLX/327.67)
+        StickLY := Floor(State.sThumbLY/327.67)
+        StickRX := Floor(State.sThumbRX/327.67)
+        StickRY := Floor(State.sThumbRY/327.67)
+
+        tDisplay.Value .= "Controller " (this.id+1) ": " All " |LX" StickLX " LY" StickLY " |RX" StickRX " RY" StickRY "`n" 
 
         DPadUp := State.wButtons & XINPUT_GAMEPAD_DPAD_UP
         DPadDown := State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN
@@ -105,15 +111,26 @@ class ControllerGUI {
 
         this.uLStick.Move(this.uLStickcX + (State.sThumbLX / 32768) * 5, this.uLStickcY - (State.sThumbLY / 32768) * 5)
         this.uRStick.Move(this.uRStickcX + (State.sThumbRX / 32768) * 5, this.uRStickcY - (State.sThumbRY / 32768) * 5)
-        if (LC and this.uLStick.Text = "○") {
-            this.uLStick.Text := "●"
-        } else if (!LC and this.uLStick.Text = "●") {
-            this.uLStick.Text := "○"
+
+        StickDZ := 32767/10000 * 100 * 1 ; Deadzone value
+
+        if (LC and (this.uLStick.Text = "◎" || this.uLStick.Text = "◍")) {
+            this.uLStick.Text := "◉"
+        } else if (!LC) {
+            if (Abs(State.sThumbLX) > StickDZ || Abs(State.sThumbLY) > StickDZ) {
+                this.uLStick.Text := "◍"
+            } else {
+                this.uLStick.Text := "◎" ; ⨀●◍◉◎○◌○◌◍◎◉◯◙◚
+            }
         }
-        if (RC and this.uRStick.Text = "○") {
-            this.uRStick.Text := "●"
-        } else if (!RC and this.uRStick.Text = "●") {
-            this.uRStick.Text := "○"
+        if (RC and (this.uRStick.Text = "◎" || this.uRStick.Text = "◍")) {
+            this.uRStick.Text := "◉"
+        } else if (!RC) {
+            if (Abs(State.sThumbRX) > StickDZ || Abs(State.sThumbRY) > StickDZ) {
+                this.uRStick.Text := "◍"
+            } else {
+                this.uRStick.Text := "◎"
+            }
         }
         XInput_SetState(this.id, LT*128, RT*128)
 
