@@ -16,7 +16,9 @@ Esc::ExitApp
 class ControllerGUI {
     __New(id) {
         this.id := id
-        this.bCont := Window.AddGroupBox("xs+0 ys+120 Section w200 h120", "Xbox Controller " A_Index)
+        ; place groupboxes stacked vertically based on controller id (0..3)
+        y := 120 + (this.id * 140)
+        this.bCont := Window.AddGroupBox("xs+0 ys+" y " Section w200 h120", "Xbox Controller " (this.id+1))
         this.bCont.GetPos(&gbX, &gbY)
 
         ; Triggers and bumpers
@@ -71,6 +73,8 @@ class ControllerGUI {
     }
     Update() {
         State := XInput_GetState(this.id)
+        if !State
+            return
         LT := State.bLeftTrigger
         RT := State.bRightTrigger
         LS := State.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER
@@ -148,24 +152,45 @@ class ControllerGUI {
         this.uBack.Value := Back?1:0
         this.uStart.Value := Start?1:0
     }
+} ; class ControllerGUI
+; Initialize container for up to 4 controllers (index 1 == controller 0)
+ControllerGUIs := [0,0,0,0]
 
-}
-ControllerGUIs := []
-
-; Auto-detect the controller number if called for:
-Loop 4 { ; Query each controller number to find out which ones exist.
-    if XInput_GetState(A_Index-1) {
-        ControllerGUIs.Push(ControllerGUI(A_Index-1))
+; Auto-detect connected controllers at startup
+Loop 4 {
+    idx := A_Index - 1
+    if XInput_GetState(idx) {
+        ControllerGUIs[A_Index] := ControllerGUI(idx)
         ControllerGUIs[A_Index].Update()
+        Window.Show() ; refresh GUI after adding controls
     }
 }
 
 Window.Show
-; Main loop
+; Main loop: detect connect/disconnect at runtime
 Loop {
     tDisplay.Value := ""
-    Loop ControllerGUIs.Length {
-        ControllerGUIs[A_Index].Update()
+    Loop 4 {
+        idx := A_Index - 1
+        State := XInput_GetState(idx)
+        if State {
+            if !ControllerGUIs[A_Index] {
+                ; Controller just connected
+                ControllerGUIs[A_Index] := ControllerGUI(idx)
+                ControllerGUIs[A_Index].Update()
+                Window.Show() ; refresh GUI after adding controls
+                tDisplay.Value .= "Controller " (idx+1) " connected.`n"
+            } else {
+                ControllerGUIs[A_Index].Update()
+            }
+        } else {
+            if ControllerGUIs[A_Index] {
+                ; Controller just disconnected
+                ControllerGUIs[A_Index].Destroy()
+                ControllerGUIs[A_Index] := 0
+                tDisplay.Value .= "Controller " (idx+1) " disconnected.`n"
+            }
+        }
     }
 
     Sleep 20
