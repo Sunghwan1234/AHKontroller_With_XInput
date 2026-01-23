@@ -7,7 +7,7 @@ InstallMouseHook
 
 Window := Gui("+AlwaysOnTop", "Controller Test Script")
 Window.AddText("w200", "AHKontroller XInputTester")
-tDisplay := Window.AddEdit("Section w200 h100 +ReadOnly")
+tDisplay := Window.AddEdit("Section w200 h120 +ReadOnly")
 
 `::ExitApp
 Esc::ExitApp
@@ -17,8 +17,8 @@ class ControllerGUI {
     __New(id) {
         this.id := id
         ; place groupboxes stacked vertically based on controller id (0..3)
-        y := 120 + (this.id * 140)
-        this.bCont := Window.AddGroupBox("xs+0 ys+" y " Section w200 h120", "Xbox Controller " (this.id+1))
+        y := 125
+        this.bCont := Window.AddGroupBox("xm+0 ys+" y " Section w200 h120", "Xbox Controller " (this.id+1))
         this.bCont.GetPos(&gbX, &gbY)
 
         ; Triggers and bumpers
@@ -73,8 +73,12 @@ class ControllerGUI {
     }
     Update() {
         State := XInput_GetState(this.id)
-        if !State
+        if !State {
+            this.bCont.Text := "Xbox Controller " (this.id+1) " (Disconnected)"
             return
+        } else {
+            this.bCont.Text := "Xbox Controller " (this.id+1)
+        }
         LT := State.bLeftTrigger
         RT := State.bRightTrigger
         LS := State.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER
@@ -158,37 +162,35 @@ ControllerGUIs := [0,0,0,0]
 
 ; Auto-detect connected controllers at startup
 Loop 4 {
-    idx := A_Index - 1
-    if XInput_GetState(idx) {
-        ControllerGUIs[A_Index] := ControllerGUI(idx)
+    index := A_Index - 1
+    if XInput_GetState(index) {
+        ControllerGUIs[A_Index] := ControllerGUI(index)
         ControllerGUIs[A_Index].Update()
-        Window.Show() ; refresh GUI after adding controls
     }
 }
 
-Window.Show
+Window.Show()
 ; Main loop: detect connect/disconnect at runtime
 Loop {
     tDisplay.Value := ""
+    ; For Each Controller Slot
     Loop 4 {
-        idx := A_Index - 1
-        State := XInput_GetState(idx)
+        index := A_Index - 1
+        State := XInput_GetState(index)
         if State {
+            ; If no controller exists
             if !ControllerGUIs[A_Index] {
-                ; Controller just connected
-                ControllerGUIs[A_Index] := ControllerGUI(idx)
+                ; new Controller connected
+                ControllerGUIs[A_Index] := ControllerGUI(index)
                 ControllerGUIs[A_Index].Update()
-                Window.Show() ; refresh GUI after adding controls
-                tDisplay.Value .= "Controller " (idx+1) " connected.`n"
+                Window.Move(,,,200 + A_Index*125) ; refresh GUI after adding controls
             } else {
                 ControllerGUIs[A_Index].Update()
             }
         } else {
             if ControllerGUIs[A_Index] {
                 ; Controller just disconnected
-                ControllerGUIs[A_Index].Destroy()
-                ControllerGUIs[A_Index] := 0
-                tDisplay.Value .= "Controller " (idx+1) " disconnected.`n"
+                ControllerGUIs[A_Index].Update()
             }
         }
     }
