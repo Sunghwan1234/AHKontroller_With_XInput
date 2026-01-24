@@ -1,18 +1,22 @@
-﻿#Include <XInput>
+﻿/* JTMC v1.1 by Sunghwan1234 */
+
+#Include <XInput>
+#Include <XIController>
 #SingleInstance
 XInput_Init()
-
-InstallMouseHook 
-
-G := Gui("+Resize", "XInput Test")
-G.Add("Text", "w200 h40", "Press LT and RT to control the vibration motors.")
-
-E := G.Add("Edit", "w200 h200 +ReadOnly")
-G.Show()
+InstallMouseHook
 
 F10::ExitApp
-NumBefore := -1
-Num := 1
+
+G := Gui("+Resize Disabled", "JoyToMinecraft")
+G.Add("Text", "w200 h40", "JoyToMinecraft Active. Press F10 to Exit")
+E := G.Add("Edit", "w200 h100 +ReadOnly")
+G.Show()
+
+Controller := XIController(FindController)
+
+SlotBefore := -1
+Slot := 1
 LSOn := 0
 RSOn := 0
 YOn := 0
@@ -20,97 +24,104 @@ YOn := 0
 MouseSpeed := 0.001  ; Adjust this value to change the mouse speed
 
 Loop {
-    Loop 4 {
-        if State := XInput_GetState(A_Index-1) {
-            LT := State.bLeftTrigger
-            RT := State.bRightTrigger
-            LS := State.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER
-            RS := State.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER
-            LC := State.wButtons & XINPUT_GAMEPAD_LEFT_THUMB
-            RC := State.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB
-            A := State.wButtons
+    State := Controller.Get()
 
-            DPadUp := State.wButtons & 0x0001
-            DPadDown := State.wButtons & 0x0002
-            DPadLeft := State.wButtons & 0x0004
-            DPadRight := State.wButtons & 0x0008
-            AKey := State.wButtons & XINPUT_GAMEPAD_A
-            YKey := State.wButtons & XINPUT_GAMEPAD_Y
+    /** Current Implemented Features:
+     *  Movement: WASD(StickL) Jump(A) Shift(B) Sprint(StickLC)
+     *  Camera: StickR, Fast(StickRC)
+     *  Inventory: E
+     *  Slot Switching: L/R Shoulder
+     *  Actions: LClick(RB) RClick(LB)
+     * 
+     * Not Yet Implemented:
+     * Better Shifting, Throw(Q), Offhand(Not on 1.8), InvSlot(DPad)
+     * Cheats: Autoclick, KeepHolding, LootAll
+     */
 
-            if State.sThumbLY > 10000
-                Send "{w Down}"
-            else if GetKeyState("w")=1
-                Send "{w Up}"
-            if State.sThumbLY < -10000
-                Send "{s Down}"
-            else if GetKeyState("s")=1
-                Send "{s Up}"
-            if State.sThumbLX < -10000
-                Send "{a Down}"
-            else if GetKeyState("a")=1
-                Send "{a Up}"
-            if State.sThumbLX > 10000
-                Send "{d Down}"
-            else if GetKeyState("d")=1
-                Send "{d Up}"
+    LT := State.LT
+    RT := State.RT
+    LS := State.LS
+    RS := State.RS
+    LC := State.LC
+    RC := State.RC
+    A := State.wButtons
 
-            if AKey = 4096
-                Send "{Space Down}"
-            else if GetKeyState("Space")=1
-                Send "{Space Up}"
-            if YKey = 32768 && YOn = 0 {
-                YOn := 1
-                Send 'e'
-            } else if YKey = 0 && YOn = 1 {
-                YOn := 0
-            }
-            if RT>0 && GetKeyState('LButton')=0
-                MouseClick 'Left' , , , , , 'Down'
-            else if RT=0 && GetKeyState('LButton')=1
-                MouseClick 'Left' , , , , , 'Up'
-            if LT>0 && GetKeyState('RButton')=0
-                MouseClick 'R' , , , , , 'Down'
-            else if LT=0 && GetKeyState('RButton')=1
-                MouseClick 'R' , , , , , 'Up'
-            if LC = 64 && GetKeyState("R") = 0
-                Send "{R Down}"
-            else if LC = 0 && GetKeyState("R")=1
-                Send "{R Up}"
-            if RC = 128
-                MouseSpeed := 0.0005
-            else
-                MouseSpeed := 0.001
-            if LS = 256 {
-                if LSOn = 0 {
-                    LSOn := 1
-                    if Num = 0
-                        Num := 9
-                    else Num -= 1
-                }
-            } else LSOn := 0
-            if RS = 512 {
-                if RSOn = 0 {
-                    RSOn := 1
-                    if Num = 9
-                        Num := 0
-                    else Num += 1
-                }
-            } else RSOn := 0
-            
-            if NumBefore != Num
-                Send Num
-            NumBefore := Num
+    if State.StickLY > 10000
+        Send "{w Down}"
+    else if GetKeyState("w")=1
+        Send "{w Up}"
+    if State.StickLY < -10000
+        Send "{s Down}"
+    else if GetKeyState("s")=1
+        Send "{s Up}"
+    if State.StickLX < -10000
+        Send "{a Down}"
+    else if GetKeyState("a")=1
+        Send "{a Up}"
+    if State.StickLX > 10000
+        Send "{d Down}"
+    else if GetKeyState("d")=1
+        Send "{d Up}"
 
-            ; Left thumbstick controls view (mouse movement)
-            MouseMoveX := State.sThumbRX * MouseSpeed
-            MouseMoveY := -State.sThumbRY * MouseSpeed  ; Invert Y-axis for natural movement
-            ; Move the mouse
-            MouseMove MouseMoveX, MouseMoveY, 1, 'R'
-
-            XInput_SetState(A_Index-1, LT*128, RT*128)
-
-            E.Value := "Controller " A_Index-1 "`n" A " " YOn
-        }
+    if State.AKey
+        Send "{Space Down}"
+    else if GetKeyState("Space")=1
+        Send "{Space Up}"
+    if State.YKe && YOn = 0 {
+        YOn := 1
+        Send 'e'
+    } else if !State.YKey && YOn = 1 {
+        YOn := 0
     }
+    if (State.BKey) {
+        Send "{Shift} Down"
+    } else if (GetKeyState("Shift")) {
+        Send "{Shift} Up"
+    }
+    if RT>0 && GetKeyState('LButton')=0
+        MouseClick 'Left' , , , , , 'Down'
+    else if RT=0 && GetKeyState('LButton')=1
+        MouseClick 'Left' , , , , , 'Up'
+    if LT>0 && GetKeyState('RButton')=0
+        MouseClick 'R' , , , , , 'Down'
+    else if LT=0 && GetKeyState('RButton')=1
+        MouseClick 'R' , , , , , 'Up'
+    if LC && GetKeyState("R") = 0
+        Send "{R Down}"
+    else if !LC && GetKeyState("R")=1
+        Send "{R Up}"
+    if RC
+        MouseSpeed := 0.0005
+    else
+        MouseSpeed := 0.001
+    if (LS) {
+        if LSOn = 0 {
+            LSOn := 1
+            if Slot = 0
+                Slot := 9
+            else Slot -= 1
+        }
+    } else LSOn := 0
+    if (RS) {
+        if RSOn = 0 {
+            RSOn := 1
+            if Slot = 9
+                Slot := 0
+            else Slot += 1
+        }
+    } else RSOn := 0
+    
+    if SlotBefore != Slot
+        Send Slot
+    SlotBefore := Slot
+
+    ; Left thumbstick controls view (mouse movement)
+    MouseMoveX := State.sThumbRX * MouseSpeed
+    MouseMoveY := -State.sThumbRY * MouseSpeed  ; Invert Y-axis for natural movement
+    ; Move the mouse
+    MouseMove MouseMoveX, MouseMoveY, 1, 'R'
+
+    Controller.Set(LT*64, RT*64)
+
     Sleep 20
 }

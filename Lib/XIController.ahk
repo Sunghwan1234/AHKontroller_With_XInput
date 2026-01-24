@@ -1,49 +1,28 @@
-/* XIController by Sunghwan1234 */
+/* XIController v1.1 by Sunghwan1234 */
 
 #Requires AutoHotkey v2.0
 #Include XInput.ahk
 
 /*
     XIController Class
+    Use FindController() To find the first controller.
 
-    LT: Left Trigger (0-255) |
-    RT: Right Trigger (0-255)
-
-    LS: Left Shoulder |
-    RS: Right Shoulder
-
-    Guide: Xbox Button |
-    Back: left | 
-    Start: right
-
+    All States (Key : A = KeyA | B : Key = BKey, A/B : Key = AKey/BKey)
+    LT: Left Trigger (0-255) | RT: Right Trigger (0-255)
+    LS/LB: Left Shoulder/Bumper | RS/RB: Right Shoulder/Bumper
+    Key : A/B/X/Y/Guide/Back/Start | A/B/X/Y Key | A/B/X/Y
+    Guide: Xbox Button | Back: left | Start: right
     DPad : Up/Down/Left/Right
+    Stick : L/R : X/Y/C (XY goes to -32768 - 32767)
+    LC/StickLC: Left Click | RC/StickRC: Right Click
 
-    Stick : L/R X/Y/C (XY goes to -32768 - 32767)
-
-    LC/StickLC: Left Click |
-    RC/StickRC: Right Click
+    GetSticks(clamp): Clamps the stick values to the desired clamp. The NEGATIVE value will go UNDER the clamp!!!
 */
 class XIController {
     __New(id) {
         this.id := id
     }
     /*
-        LT: Left Trigger (0-255) |
-        RT: Right Trigger (0-255)
-
-        LS: Left Shoulder |
-        RS: Right Shoulder
-
-        Guide: Xbox Button |
-        Back: left | 
-        Start: right
-
-        DPad : Up/Down/Left/Right
-    
-        Stick : L/R X/Y/C (XY goes to -32768 - 32767)
-    
-        LC/StickLC: Left Click |
-        RC/StickRC: Right Click
      */
     Get() {
         State := XInput_GetState(this.id)
@@ -51,17 +30,26 @@ class XIController {
             return -1
 
         return {
-            state: State,
+            State: State,
             LT: State.bLeftTrigger,
             RT: State.bRightTrigger,
             LS: (State.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? 1 : 0,
             RS: (State.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? 1 : 0,
+            LB: (State.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? 1 : 0,
+            RB: (State.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? 1 : 0,
+
             LC: (State.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? 1 : 0,
             RC: (State.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) ? 1 : 0,
+
             DPadUp: (State.wButtons & XINPUT_GAMEPAD_DPAD_UP) ? 1 : 0,
             DPadDown: (State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) ? 1 : 0,
             DPadLeft: (State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) ? 1 : 0,
             DPadRight: (State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) ? 1 : 0,
+            Up: (State.wButtons & XINPUT_GAMEPAD_DPAD_UP) ? 1 : 0,
+            Down: (State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) ? 1 : 0,
+            Left: (State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) ? 1 : 0,
+            Right: (State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) ? 1 : 0,
+
             AKey: (State.wButtons & XINPUT_GAMEPAD_A) ? 1 : 0,
             BKey: (State.wButtons & XINPUT_GAMEPAD_B) ? 1 : 0,
             XKey: (State.wButtons & XINPUT_GAMEPAD_X) ? 1 : 0,
@@ -69,15 +57,34 @@ class XIController {
             Guide: (State.wButtons & XINPUT_GAMEPAD_GUIDE) ? 1 : 0,
             Back: (State.wButtons & XINPUT_GAMEPAD_BACK) ? 1 : 0,
             Start: (State.wButtons & XINPUT_GAMEPAD_START) ? 1 : 0,
+            
+            KeyA: (State.wButtons & XINPUT_GAMEPAD_A) ? 1 : 0,
+            KeyB: (State.wButtons & XINPUT_GAMEPAD_B) ? 1 : 0,
+            KeyX: (State.wButtons & XINPUT_GAMEPAD_X) ? 1 : 0,
+            KeyY: (State.wButtons & XINPUT_GAMEPAD_Y) ? 1 : 0,
+            KeyGuide: (State.wButtons & XINPUT_GAMEPAD_GUIDE) ? 1 : 0,
+            KeyBack: (State.wButtons & XINPUT_GAMEPAD_BACK) ? 1 : 0,
+            KeyStart: (State.wButtons & XINPUT_GAMEPAD_START) ? 1 : 0,
+
+            A: (State.wButtons & XINPUT_GAMEPAD_A) ? 1 : 0,
+            B: (State.wButtons & XINPUT_GAMEPAD_B) ? 1 : 0,
+            X: (State.wButtons & XINPUT_GAMEPAD_X) ? 1 : 0,
+            Y: (State.wButtons & XINPUT_GAMEPAD_Y) ? 1 : 0,
+
             StickLC: State.wButtons & XINPUT_GAMEPAD_LEFT_THUMB ? 1 : 0,
             StickRC: State.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB ? 1 : 0,
             StickLX: State.sThumbLX,
             StickLY: State.sThumbLY,
             StickRX: State.sThumbRX,
-            StickRY: State.sThumbRY
+            StickRY: State.sThumbRY,
+
+            ThumbLX: State.sThumbLX,
+            ThumbLY: State.sThumbLY,
+            ThumbRX: State.sThumbRX,
+            ThumbRY: State.sThumbRY
+            
         }
     }
-    ; TODO: make restricted getsticks
     /**  */
     GetSticks(clamp) {
         State := XInput_GetState(this.id)
@@ -85,10 +92,10 @@ class XIController {
             return -1
 
         return {
-            StickLX: State.sThumbLX,
-            StickLY: State.sThumbLY,
-            StickRX: State.sThumbRX,
-            StickRY: State.sThumbRY
+            LX: State.sThumbLX/(32767/clamp),
+            LY: State.sThumbLY/(32767/clamp),
+            RX: State.sThumbRX/(32767/clamp),
+            RY: State.sThumbRY/(32767/clamp)
         }
     }
     /** 0~65535 */
@@ -98,6 +105,7 @@ class XIController {
 }
 /**
  * Finds the first controller detected.
+ * Returns the index of the controller. -1 if could not be found.
  */
 FindController() {
     Loop 4 {
