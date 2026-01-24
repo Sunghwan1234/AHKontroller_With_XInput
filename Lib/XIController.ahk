@@ -1,10 +1,50 @@
+/* XIController by Sunghwan1234 */
+
 #Requires AutoHotkey v2.0
 #Include XInput.ahk
 
+/*
+    XIController Class
+
+    LT: Left Trigger (0-255) |
+    RT: Right Trigger (0-255)
+
+    LS: Left Shoulder |
+    RS: Right Shoulder
+
+    Guide: Xbox Button |
+    Back: left | 
+    Start: right
+
+    DPad : Up/Down/Left/Right
+
+    Stick : L/R X/Y/C (XY goes to -32768 - 32767)
+
+    LC/StickLC: Left Click |
+    RC/StickRC: Right Click
+*/
 class XIController {
     __New(id) {
         this.id := id
     }
+    /*
+        LT: Left Trigger (0-255) |
+        RT: Right Trigger (0-255)
+
+        LS: Left Shoulder |
+        RS: Right Shoulder
+
+        Guide: Xbox Button |
+        Back: left | 
+        Start: right
+
+        DPad : Up/Down/Left/Right
+    
+        Stick : L/R X/Y/C (XY goes to -32768 - 32767)
+    
+        LC/StickLC: Left Click |
+        RC/StickRC: Right Click
+     */
     Get() {
         State := XInput_GetState(this.id)
         if !State ; If the controller is not connected, return an empty object
@@ -55,4 +95,15 @@ class XIController {
     Set(L, R) {
         XInput_SetState(this.id, L, R)
     }
+}
+/**
+ * Finds the first controller detected.
+ */
+FindController() {
+    Loop 4 {
+        if XInput_GetState(A_Index-1) {
+            return A_Index-1
+        }
+    }
+    return -1
 }
