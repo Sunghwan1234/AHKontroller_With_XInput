@@ -1,15 +1,12 @@
 ﻿/* JTMC v1.1 by Sunghwan1234 */
-
-#Include <XInput>
 #Include <XIController>
 #SingleInstance
-XInput_Init()
 InstallMouseHook
 
 F10::ExitApp
 
 G := Gui("+Resize Disabled", "JoyToMinecraft")
-G.Add("Text", "w200 h40", "JoyToMinecraft Active. Press F10 to Exit")
+G.Add("Text", "w200 h40", "JoyToMinecraft Active. Press F10 to Exit.")
 E := G.Add("Edit", "w200 h100 +ReadOnly")
 G.Show()
 
