@@ -1,6 +1,7 @@
+/* XIGUI v1.0 by Sunghwan1234 */
 #Requires AutoHotkey v2.0-beta.6
 #Include XInput.ahk
-#Include XIController.ahk
+#Include XIController.ahk ; Was built on XIC v1.0
 #SingleInstance
 XInput_Init
 InstallMouseHook

@@ -1,9 +1,28 @@
 Welcome to AHKontroller (With XInput)!
 This is a utility & usables repo with many cool things!
 
-JoyTester : More Advanced Joystick Tester (NOUPD.)
-XInputTester : Even more advanced Controller tester (With XInput) (WIP)
+Utilities & Games!
+XInputTester (XIT) v1.4 : Advanced Controller tester (With XInput)!
+ - Full GUI With every XI key & Sticks with Drift!
+ - Detection of new & disconnected controllers
+XIGUI_Tester : XInputTester using XIGUI. kinda bugged & dont know why
+JoyToMouse (JTM) v1.0 : Easy Joystick to Mouse!
+ - Sensitivity Control (inside the code for now)
+ - Scrolling with Left Stick
+ - Left Click with Right Shoulder & Bumper
+ - Right Click with Left Bumper & A Key (Some controllers have buttons on the back)
+JoyToMinecraft (JTMC) v1.1 : Convert Controller Input to Keyboard Input + Mouse!
+ - More info on the file, is mainly for EaglerCraft where Sprint is R.
+ - A to Jump, B to Shift. Y for Inventory. I think you can figure out the rest.
 
-Joy2Minecraft : Convert Controller Input to Keyboard Input + Mouse!
+Libraries!!!
+XIController (XIC) v1.1 : Easy Controller management with one class!
+ - Function to auto find first controller: FindController()
+ - Use XInput Indexes to create: XIController(FindController())
+ - Use Get() to get an object with many keys: joy.Get().KeyA
+XIGUI v1.0 : XInputTester using XIController. Im new to these types of libraries so please excuse my terrible code
+
+Archive
+JoyTester : Old Joystick Tester (Will not update.)
 
 made with <3 by Sunghwan1234

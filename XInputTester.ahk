@@ -1,3 +1,5 @@
+/** XIT v1.4 by Sunghwan1234 */
+
 #Requires AutoHotkey v2.0-beta.6
 #Include <XInput>
 #SingleInstance
