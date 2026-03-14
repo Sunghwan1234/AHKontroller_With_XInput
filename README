@@ -1,24 +1,28 @@
-Welcome to AHKontroller (With XInput) - JoyToMinecraft Release!
-This is a Release Branch with just JoyToMinecraft and its libraries.
+Welcome to AHKontroller (With XInput)!
+This is a utility & usables repo with many cool things!
 
-Completly new to AutoHotkey?
-1. Install AutoHotkey (Must support version 2)
-2. Run joytoMinecraft.ahk with AutoHotkey
-3. Press F10 or the XBox Button to exit after you're done!
+Utilities & Games!
+XInputTester (XIT) : Advanced Controller tester (With XInput)!
+ - Full GUI With every XI key & Sticks with Drift!
+ - Detection of new & disconnected controllers
+XIGUI_Tester : XInputTester using XIGUI. kinda bugged & dont know why
+JoyToMouse (JTM) : Easy Joystick to Mouse!
+ - Sensitivity Control (inside the code for now)
+ - Scrolling with Left Stick
+ - Left Click with Right Shoulder & Bumper
+ - Right Click with Left Bumper & A Key (Some controllers have buttons on the back)
+JoyToMinecraft (JTMC) : Convert Controller Input to Keyboard Input + Mouse!
+ - More info on the file, is mainly for EaglerCraft where Sprint is R.
+ - A to Jump, B to Shift. Y for Inventory. I think you can figure out the rest.
 
-JoyToMinecraft (JTMC) v1.3 features:
-*  Type: KeyboardKey(ControllerKey)
-*  Movement: WASD(Left Stick) Space(A) R(X) Sprint(Click Left Stick) {SNEAKING IS CHANGED TO X.}
-*  Camera: Mouse(Right Stick), Slow(Hold down Right Stick)
-*  Inventory: E(Y)
-*  Throw: Q(Button Left of Xbox)
-*  Slot Switching: 123456789(L/R Shoulder (or Bumper))
-*  Actions: MouseLClick(Right Trigger) MouseRClick(Left Trigger)
-*  Menu: Escape(Button Right of Xbox)
-*  Stop Script: (XBox Button)
-* 
-* Not Yet Implemented:
-* Better Shifting, Offhand (Not on 1.8), InvSlot(DPad)
-* Cheats: Autoclick, KeepHolding, LootAll
+Libraries!!!
+XIController (XIC) : Easy Controller management with one class!
+ - Function to auto find first controller: FindController()
+ - Use XInput Indexes to create: XIController(FindController())
+ - Use Get() to get an object with many keys: joy.Get().KeyA
+XIGUI : XInputTester using XIController. Im new to these types of libraries so please excuse my terrible code
+
+Archive
+JoyTester : Old Joystick Tester (Will not update.)
 
 made with <3 by Sunghwan1234

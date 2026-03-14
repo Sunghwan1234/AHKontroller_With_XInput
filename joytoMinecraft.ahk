@@ -1,4 +1,4 @@
-﻿/* JTMC v1.3 by Sunghwan1234 */
+/* JTMC v1.3 by Sunghwan1234 */
 
 #Include <XInput>
 #Include <XIController>
