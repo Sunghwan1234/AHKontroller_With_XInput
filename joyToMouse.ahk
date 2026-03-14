@@ -1,9 +1,10 @@
+/* JoyToMouse by Sunghwan1234 */
+
 #Include <XInput>
 #Include <XIController>
 #SingleInstance
 XInput_Init
 InstallMouseHook 
-/** End of config */
 
 F10::ExitApp
 `::ExitApp

@@ -1,9 +1,9 @@
-﻿/* JTMC v1.1 by Sunghwan1234 */
+﻿/* JTMC v1.2 by Sunghwan1234 */
 
 #Include <XInput>
 #Include <XIController>
 #SingleInstance
-XInput_Init()
+XInput_Init
 InstallMouseHook
 
 F10::ExitApp
@@ -13,7 +13,7 @@ G.Add("Text", "w200 h40", "JoyToMinecraft Active. Press F10 to Exit")
 E := G.Add("Edit", "w200 h100 +ReadOnly")
 G.Show()
 
-Controller := XIController(FindController)
+Controller := XIController(FindController())
 
 SlotBefore := -1
 Slot := 1
@@ -44,7 +44,6 @@ Loop {
     RS := State.RS
     LC := State.LC
     RC := State.RC
-    A := State.wButtons
 
     if State.StickLY > 10000
         Send "{w Down}"
@@ -67,7 +66,7 @@ Loop {
         Send "{Space Down}"
     else if GetKeyState("Space")=1
         Send "{Space Up}"
-    if State.YKe && YOn = 0 {
+    if State.YKey && YOn = 0 {
         YOn := 1
         Send 'e'
     } else if !State.YKey && YOn = 1 {
@@ -116,8 +115,8 @@ Loop {
     SlotBefore := Slot
 
     ; Left thumbstick controls view (mouse movement)
-    MouseMoveX := State.sThumbRX * MouseSpeed
-    MouseMoveY := -State.sThumbRY * MouseSpeed  ; Invert Y-axis for natural movement
+    MouseMoveX := State.StickRX * MouseSpeed
+    MouseMoveY := -State.StickRY * MouseSpeed  ; Invert Y-axis for natural movement
     ; Move the mouse
     MouseMove MouseMoveX, MouseMoveY, 1, 'R'
 
