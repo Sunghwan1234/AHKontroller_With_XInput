@@ -111,7 +111,7 @@ Loop {
     if (LS) {
         if LSOn = 0 {
             LSOn := 1
-            if Slot = 0
+            if Slot = 1
                 Slot := 9
             else Slot -= 1
         }
@@ -120,7 +120,7 @@ Loop {
         if RSOn = 0 {
             RSOn := 1
             if Slot = 9
-                Slot := 0
+                Slot := 1
             else Slot += 1
         }
     } else RSOn := 0
