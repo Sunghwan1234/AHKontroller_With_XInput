@@ -57,6 +57,12 @@ class XIController {
             Guide: (State.wButtons & XINPUT_GAMEPAD_GUIDE) ? 1 : 0,
             Back: (State.wButtons & XINPUT_GAMEPAD_BACK) ? 1 : 0,
             Start: (State.wButtons & XINPUT_GAMEPAD_START) ? 1 : 0,
+
+            Home: (State.wButtons & XINPUT_GAMEPAD_GUIDE) ? 1 : 0,
+            XBox: (State.wButtons & XINPUT_GAMEPAD_GUIDE) ? 1 : 0,
+            Tabs: (State.wButtons & XINPUT_GAMEPAD_BACK) ? 1 : 0,
+            Hamburger: (State.wButtons & XINPUT_GAMEPAD_START) ? 1 : 0,
+            Menu: (State.wButtons & XINPUT_GAMEPAD_START) ? 1 : 0,
             
             KeyA: (State.wButtons & XINPUT_GAMEPAD_A) ? 1 : 0,
             KeyB: (State.wButtons & XINPUT_GAMEPAD_B) ? 1 : 0,

@@ -1,16 +1,19 @@
-﻿/* JTMC v1.1 by Sunghwan1234 */
+﻿/* JTMC v1.3 by Sunghwan1234 */
+
+#Include <XInput>
 #Include <XIController>
 #SingleInstance
+XInput_Init
 InstallMouseHook
 
 F10::ExitApp
 
 G := Gui("+Resize Disabled", "JoyToMinecraft")
-G.Add("Text", "w200 h40", "JoyToMinecraft Active. Press F10 to Exit.")
+G.Add("Text", "w200 h40", "JoyToMinecraft Active. Press F10 or the Top button on your controller to Exit")
 E := G.Add("Edit", "w200 h100 +ReadOnly")
 G.Show()
 
-Controller := XIController(FindController)
+Controller := XIController(FindController())
 
 SlotBefore := -1
 Slot := 1
@@ -24,14 +27,17 @@ Loop {
     State := Controller.Get()
 
     /** Current Implemented Features:
-     *  Movement: WASD(StickL) Jump(A) Shift(B) Sprint(StickLC)
-     *  Camera: StickR, Fast(StickRC)
+     *  Movement: WASD(StickL) Jump(A) Shift(X) Sprint(StickLC)
+     *  Camera: StickR, Slow(StickRC)
      *  Inventory: E
      *  Slot Switching: L/R Shoulder
      *  Actions: LClick(RB) RClick(LB)
+     *  Throw: Left button of XBox: Tabs/Back
+     *  Menu: Right button of Xbox: Start/Menu/Hamburger
+     *  Quit: XBox button or Guide
      * 
      * Not Yet Implemented:
-     * Better Shifting, Throw(Q), Offhand(Not on 1.8), InvSlot(DPad)
+     * Better Shifting, Offhand(Not on 1.8), InvSlot(DPad)
      * Cheats: Autoclick, KeepHolding, LootAll
      */
 
@@ -41,7 +47,6 @@ Loop {
     RS := State.RS
     LC := State.LC
     RC := State.RC
-    A := State.wButtons
 
     if State.StickLY > 10000
         Send "{w Down}"
@@ -64,17 +69,29 @@ Loop {
         Send "{Space Down}"
     else if GetKeyState("Space")=1
         Send "{Space Up}"
-    if State.YKe && YOn = 0 {
+    if State.YKey && YOn = 0 {
         YOn := 1
         Send 'e'
     } else if !State.YKey && YOn = 1 {
         YOn := 0
     }
-    if (State.BKey) {
-        Send "{Shift} Down"
+    if (State.XKey) {
+        Send "{Shift Down}"
     } else if (GetKeyState("Shift")) {
-        Send "{Shift} Up"
+        Send "{Shift Up}"
     }
+    if (State.Tabs) {
+        Send "{Q Down}"
+    } else if (GetKeyState("Q")) {
+        Send "{Q Up}"
+    }
+
+    if (State.Menu) {
+        Send "{Escape Down}"
+    } else if (GetKeyState("Escape")) {
+        Send "{Escape Up}"
+    }
+
     if RT>0 && GetKeyState('LButton')=0
         MouseClick 'Left' , , , , , 'Down'
     else if RT=0 && GetKeyState('LButton')=1
@@ -113,12 +130,16 @@ Loop {
     SlotBefore := Slot
 
     ; Left thumbstick controls view (mouse movement)
-    MouseMoveX := State.sThumbRX * MouseSpeed
-    MouseMoveY := -State.sThumbRY * MouseSpeed  ; Invert Y-axis for natural movement
+    MouseMoveX := State.StickRX * MouseSpeed
+    MouseMoveY := -State.StickRY * MouseSpeed  ; Invert Y-axis for natural movement
     ; Move the mouse
     MouseMove MouseMoveX, MouseMoveY, 1, 'R'
 
     Controller.Set(LT*64, RT*64)
 
     Sleep 20
+
+    if (State.Home) {
+        ExitApp
+    }
 }
