@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-#Include <XIGUI>
+#Include ../Lib/XIGUI.ahk
 #SingleInstance
 XIGUI_Init
 

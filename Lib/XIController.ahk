@@ -1,8 +1,7 @@
-/* XIController v1.1 by Sunghwan1234 */
+/* XIController v1.2 by Sunghwan1234 */
 
 #Requires AutoHotkey v2.0
 #Include XInput.ahk
-
 /*
     XIController Class
     Use FindController() To find the first controller.
@@ -91,7 +90,7 @@ class XIController {
             
         }
     }
-    /**  */
+    /** Get stick's xy within -clamp to clamp */
     GetSticks(clamp) {
         State := XInput_GetState(this.id)
         if !State

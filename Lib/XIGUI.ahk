@@ -1,16 +1,12 @@
-/* XIGUI v1.0 by Sunghwan1234 */
+/* XIGUI v1.2 by Sunghwan1234 */
 #Requires AutoHotkey v2.0-beta.6
-#Include XInput.ahk
 #Include XIController.ahk ; Was built on XIC v1.0
 #SingleInstance
-XInput_Init
-InstallMouseHook
 /* End Config. */
 
-
-Window := Gui("+AlwaysOnTop", "XIGUI Window")
-Window.AddText("w200", "AHKontroller XIGUI")
-tDisplay := Window.AddEdit("Section w200 h100 +ReadOnly")
+XIGUI := Gui("+AlwaysOnTop", "XIGUI Window")
+XIGUI.AddText("w200", "AHKontroller XIGUI")
+tDisplay := XIGUI.AddEdit("Section w200 h100 +ReadOnly")
 
 /** The GUI for a controller. */
 class ControllerGUI {
@@ -18,14 +14,14 @@ class ControllerGUI {
         this.id := id
         ; place groupboxes stacked vertically based on controller id (0..3)
         y := 125
-        this.bCont := Window.AddGroupBox("xm+0 ys+" y " Section w200 h120", "Xbox Controller " (this.id+1))
+        this.bCont := XIGUI.AddGroupBox("xm+0 ys+" y " Section w200 h120", "Xbox Controller " (this.id+1))
         this.bCont.GetPos(&gbX, &gbY)
 
         ; Triggers and bumpers
-        this.uLT := Window.AddProgress("xs+10 ys+15 w50 h10 Range0-255","LT")
-        this.uLS := Window.AddButton("xs+10 ys+25 w50 h20","LS")
-        this.uRT := Window.AddProgress("xs+140 ys+15 w50 h10 Range0-255","RT") ; 200(w)-10(border)-50(w) = 140x
-        this.uRS := Window.AddButton("xs+140 ys+25 w50 h20","RS")
+        this.uLT := XIGUI.AddProgress("xs+10 ys+15 w50 h10 Range0-255","LT")
+        this.uLS := XIGUI.AddButton("xs+10 ys+25 w50 h20","LS")
+        this.uRT := XIGUI.AddProgress("xs+140 ys+15 w50 h10 Range0-255","RT") ; 200(w)-10(border)-50(w) = 140x
+        this.uRS := XIGUI.AddButton("xs+140 ys+25 w50 h20","RS")
         
         ; Sticks
         this.uStickW := 18
@@ -33,12 +29,12 @@ class ControllerGUI {
 
         this.uLStickcX := gbX+28
         this.uLStickcY := gbY+50
-        this.uLStick := Window.AddText("xs+28 ys+50 w" this.uStickW " h" this.uStickH " BackgroundTrans","◎")
+        this.uLStick := XIGUI.AddText("xs+28 ys+50 w" this.uStickW " h" this.uStickH " BackgroundTrans","◎")
         this.uLStick.SetFont("s20")
 
         this.uRStickcX := gbX+190-60
         this.uRStickcY := gbY+60+20
-        this.uRStick := Window.AddText("xs+140 ys+70 w" this.uStickW " h" this.uStickH " BackgroundTrans","◎")
+        this.uRStick := XIGUI.AddText("xs+140 ys+70 w" this.uStickW " h" this.uStickH " BackgroundTrans","◎")
         this.uRStick.SetFont("s20")
 
         ; Buttons
@@ -47,10 +43,10 @@ class ControllerGUI {
 
         this.uButtonH := 20
 
-        this.uA := Window.AddRadio("Group xs+155 ys+" this.uYy+this.uAya " w25 h" this.uButtonH,"A") ; Bottom
-        this.uB := Window.AddRadio("Group xs+180 ys+" this.uYy+this.uAya/2 " w25 h" this.uButtonH,"B") ; Right
-        this.uX := Window.AddRadio("Group xs+130 ys+" this.uYy+this.uAya/2 " w25 h" this.uButtonH,"X") ; Left
-        this.uY := Window.AddRadio("Group xs+155 ys+" this.uYy " w25 h" this.uButtonH,"Y") ; Top
+        this.uA := XIGUI.AddRadio("Group xs+155 ys+" this.uYy+this.uAya " w25 h" this.uButtonH,"A") ; Bottom
+        this.uB := XIGUI.AddRadio("Group xs+180 ys+" this.uYy+this.uAya/2 " w25 h" this.uButtonH,"B") ; Right
+        this.uX := XIGUI.AddRadio("Group xs+130 ys+" this.uYy+this.uAya/2 " w25 h" this.uButtonH,"X") ; Left
+        this.uY := XIGUI.AddRadio("Group xs+155 ys+" this.uYy " w25 h" this.uButtonH,"Y") ; Top
         
         ; Arrows
 
@@ -60,15 +56,16 @@ class ControllerGUI {
         this.uDPadCenterX := 70
         this.uDPadCenterY := 85
 
-        this.uDPadUp := Window.AddButton("xs+" (this.uDPadCenterX) " ys+" (this.uDPadCenterY - this.DPadH) " w" this.DPadW " h" this.DPadH,"↑")
-        this.uDPadDown := Window.AddButton("xs+" (this.uDPadCenterX) " ys+" (this.uDPadCenterY + this.DPadH) " w" this.DPadW " h" this.DPadH,"↓")
-        this.uDPadLeft := Window.AddButton("xs+" (this.uDPadCenterX - this.DPadW) " ys+" (this.uDPadCenterY) " w" this.DPadW " h" this.DPadH,"←")
-        this.uDPadRight := Window.AddButton("xs+" (this.uDPadCenterX + this.DPadW) " ys+" (this.uDPadCenterY) " w" this.DPadW " h" this.DPadH,"→")
+        this.uDPadUp := XIGUI.AddButton("xs+" (this.uDPadCenterX) " ys+" (this.uDPadCenterY - this.DPadH) " w" this.DPadW " h" this.DPadH,"↑")
+        this.uDPadDown := XIGUI.AddButton("xs+" (this.uDPadCenterX) " ys+" (this.uDPadCenterY + this.DPadH) " w" this.DPadW " h" this.DPadH,"↓")
+        this.uDPadLeft := XIGUI.AddButton("xs+" (this.uDPadCenterX - this.DPadW) " ys+" (this.uDPadCenterY) " w" this.DPadW " h" this.DPadH,"←")
+        this.uDPadRight := XIGUI.AddButton("xs+" (this.uDPadCenterX + this.DPadW) " ys+" (this.uDPadCenterY) " w" this.DPadW " h" this.DPadH,"→")
 
         ; Central Keys
-        this.uXBox := Window.AddRadio("Group xs+94 ys+20 w10 h20","")
-        this.uBack := Window.AddRadio("Group xs+70 ys+25 w10 h20","")
-        this.uStart := Window.AddRadio("Group xs+118 ys+25 w10 h20","")
+        this.uXBox := XIGUI.AddRadio("Group xs+94 ys+20 w10 h20","")
+        this.uBack := XIGUI.AddRadio("Group xs+70 ys+25 w10 h20","")
+        this.uStart := XIGUI.AddRadio("Group xs+118 ys+25 w10 h20","")
+        XIGUI.AddText("xs ys+128 Section", "--------------")
     }
     /** Update GUI With ControllerObj */
     Update(ControllerObj) {
@@ -137,6 +134,7 @@ Controllers := [0,0,0,0]
 ControllerGUIs := [0,0,0,0]
 
 XIGUI_Init() {
+    XInput_Init
     ; Auto-detect the controller number if called for:
     Loop 4 { ; Query each controller number to find out which ones exist.
         if XInput_GetState(A_Index-1) {
@@ -145,7 +143,7 @@ XIGUI_Init() {
         }
     }
 
-    Window.Show()
+    XIGUI.Show()
 }
 
 /** Call this per loop to update the GUIs */
@@ -161,7 +159,7 @@ XIGUI_Update() {
             if !ControllerGUIs[A_Index] {
                 Controllers[A_Index] := XIController(Cindex)
                 ControllerGUIs[A_Index] := ControllerGUI(Cindex)
-                Window.Move(,,,200 + A_Index*125) ; refresh GUI after adding controls
+                XIGUI.Move(,,,200 + A_Index*125) ; refresh GUI after adding controls
             }
         }
         if ControllerGUIs[A_Index] {
