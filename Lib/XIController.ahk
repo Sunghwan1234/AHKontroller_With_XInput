@@ -48,6 +48,10 @@ class XIController {
             Down: (State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) ? 1 : 0,
             Left: (State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) ? 1 : 0,
             Right: (State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) ? 1 : 0,
+            U: (State.wButtons & XINPUT_GAMEPAD_DPAD_UP) ? 1 : 0,
+            D: (State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) ? 1 : 0,
+            L: (State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) ? 1 : 0,
+            R: (State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) ? 1 : 0,
 
             AKey: (State.wButtons & XINPUT_GAMEPAD_A) ? 1 : 0,
             BKey: (State.wButtons & XINPUT_GAMEPAD_B) ? 1 : 0,
@@ -89,6 +93,13 @@ class XIController {
             ThumbRY: State.sThumbRY
             
         }
+    }
+    GetMap() {
+        newMap := Map() ; Create a new, empty Map
+        for key, value in this.Get().OwnProps() {
+            newMap.Set(key, value) ; Add each key-value pair to the Map
+        }
+        return newMap
     }
     /** Get stick's xy within -clamp to clamp */
     GetSticks(clamp) {

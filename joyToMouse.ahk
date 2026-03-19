@@ -1,5 +1,6 @@
 #Include <XIGUI>
 #SingleInstance
+#UseHook
 XIGUI_Init
 InstallMouseHook 
 /** End of config */

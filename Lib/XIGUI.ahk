@@ -4,7 +4,7 @@
 #SingleInstance
 /* End Config. */
 
-XIGUI := Gui("+AlwaysOnTop", "XIGUI Window")
+XIGUI := Gui("", "XIGUI Window")
 XIGUI.AddText("w200", "AHKontroller XIGUI")
 tDisplay := XIGUI.AddEdit("Section w200 h100 +ReadOnly")
 
