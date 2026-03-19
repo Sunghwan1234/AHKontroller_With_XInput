@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 #Include XIController.ahk ; XIController already includes xinput
 
-/** XICMAP v1.0 by Sunghwan1234 */
+/** XICMAP v1.1 by Sunghwan1234 */
 class XICMAP {
     __New(id) {
         this.xic := XIController(id)
@@ -38,9 +38,30 @@ class XICMAP {
         }
         return 1
     }
+    /**
+     * Unbinds a bind. Returns -1 on fail.
+     * @param cKey 
+     */
     Unbind(cKey) {
         if (this.binds.Has(cKey))
             this.binds.Delete(cKey)
+        else return -1
+    }
+    /**
+     * Rebinds a binding. Make sure @param once is the same or else it will give an eror.
+     * @param cKey 
+     * @param kKey 
+     * @param once 
+     */
+    Rebind(cKey, kKey, once:=0) {
+        if (!once && !this.binds.Has(cKey)) {
+            MsgBox(cKey " does not exist!")
+            return -1
+        } else if (once && !this.bindC.Has(cKey)) {
+            MsgBox(cKey " does not exist!")
+            return -1
+        }
+        this.Bind(cKey, kKey, once)
     }
     /**
      * Bind the mouse to a joystick. You must do InstallMouseHook before.
@@ -86,8 +107,22 @@ class XICMAP {
             pressed:0
         }
     }
+    UnbindKeyScroll(kKey) {
+        if (this.scroll.Has(kKey)) {
+            this.scroll.Delete(kKey)
+        } else return -1
+    }
     /**
-     * Bind clicks on a mouse. Clicks mean it only executes once.
+     * yeah this is the same thing lol
+     * @param kKey 
+     * @param scrollAmount 
+     * @param once 
+     */
+    RebindKeyScroll(kKey, scrollAmount, once:=0) {
+        this.BindKeyScroll(kKey, scrollAmount, once)
+    }
+    /**
+     * Bind clicks on a mouse. Clicks mean it only executes once. WIP
      * @param leftClick 
      * @param rightClick 
      */
@@ -97,6 +132,9 @@ class XICMAP {
             rightClick:rightClick,
             middleClick:middleClick
         }
+    }
+    UnbindClick() {
+        this.click := 0
     }
     /**
      * Bind a joystick to movement, such as wasd.
