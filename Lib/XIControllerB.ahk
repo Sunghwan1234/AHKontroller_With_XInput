@@ -2,7 +2,12 @@
 
 #Requires AutoHotkey v2.0
 #Include XInput.ahk
-
+/**
+ * State, LeftTrigger, RightTrigger, LeftShoulder, RightShoulder, LeftThumb, RightThumb, ThumbLX, ThumbLY, ThumbRX, ThumbRY,
+ * DPadUp, DPadDown, DPadLeft, DPadRight, A, B, X, Y, Guide, Back, Start
+ * @param id Controller ID (0-3)
+ * @returns An object containing the state of the controller. Returns -1 if the controller is not connected.
+ */
 GetButtons(id) {
     State := XInput_GetState(id)
     if !State ; If the controller is not connected, return an empty object

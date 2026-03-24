@@ -15,14 +15,19 @@ JoyToMouse (JTM) : Control your mouse using XIController.
 JoyToMinecraft (JTMC) : Convert Controller Input to Keyboard Input + Mouse!
  - More info on the file, is mainly for EaglerCraft where Sprint is R.
  - A to Jump, B to Shift. Y for Inventory. More inside the file!
+
+XICMap Fun!
 JoyToMinecraftvXICMap : JTMC using XICMap. Has a bit more features!
  - More info in the file.
+ioGame : Play mouse-based io games i guess lol
 
 Libraries!!!
 XIController (XIC) : Easy Controller management with one class!
  - Function to auto find first controller: FindController()
  - Use XInput Indexes to create: XIController(FindController())
  - Use Get() to get an object with many keys: joy.Get().KeyA
+XIControllerB (XICB) : Easy Controller management, WITHOUT the class!
+ - All functions changed to require an id.
 XIGUI : XInputTester using XIController. Im new to these types of libraries so please excuse my terrible code
 XICMap : Easy Controller Mapping to keyboard & mouse.
  - Easily make mappings in-code.
