@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 #Include XIController.ahk ; XIController already includes xinput
 
-/** XICMAP v1.1 by Sunghwan1234 */
+/** XICMAP v1.2 by Sunghwan1234 */
 class XICMAP {
     __New(id) {
         this.xic := XIController(id)
@@ -69,10 +69,30 @@ class XICMAP {
      * @param speed 
      * @param deadzone
      */
-    BindMouse(joystick:=1, speed:="0.001", deadzone:="256") {
+    BindMouse(joystick:=1, speed:=0.001, deadzone:=256) {
         this.mouse := {
             joystick: joystick,
+            abs: false,
             speed: speed,
+            deadzone: deadzone
+        }
+    }
+    /**
+     * Binds the mouse to a location on the screen, defaulting to the middle.
+     * @param joystick isRight? Default 1
+     * @param x 
+     * @param y 
+     * @param dist 
+     * @param deadzone 
+     */
+    BindAbsoluteMouse(joystick:=1, dist:=128, x:=A_ScreenWidth/2, y:=A_ScreenHeight/2, deadzone:=256) {
+        CoordMode("Mouse","Screen")
+        this.mouse := {
+            joystick: joystick,
+            abs: true,
+            absx: x,
+            absy: y,
+            absdist: dist,
             deadzone: deadzone
         }
     }
@@ -191,10 +211,15 @@ class XICMAP {
                 StickX := State.StickLX
                 StickY := State.StickLY
             }
-            MouseMoveX := StickX * mouse.speed
-            MouseMoveY := -StickY * mouse.speed ; Invert Y-axis
-            ; Move the mouse
-            MouseMove MouseMoveX, MouseMoveY, 1, 'R'
+            if (mouse.abs) {
+                MouseMoveX := mouse.absx+( (StickX/32767) * mouse.absdist)
+                MouseMoveY := mouse.absy+(-(StickY/32767) * mouse.absdist) ; Invert Y-axis
+                MouseMove MouseMoveX, MouseMoveY, 1
+            } else {
+                MouseMoveX := StickX * mouse.speed
+                MouseMoveY := -StickY * mouse.speed ; Invert Y-axis
+                MouseMove MouseMoveX, MouseMoveY, 1, 'R'
+            }
         }
         if (mouseButtons) {
             if State.GetOwnPropDesc(mouseButtons.L).Value>0 && GetKeyState('LButton')=0

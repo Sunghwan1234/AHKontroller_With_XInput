@@ -1,6 +1,6 @@
 /** joyToMinecraft vXICMap1.1 */
 #Requires AutoHotkey v2.0
-#Include <XICMap>
+#Include ../Lib/XICMap.ahk
 #SingleInstance
 XInput_Init
 InstallMouseHook
