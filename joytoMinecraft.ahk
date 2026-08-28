@@ -23,6 +23,7 @@ YOn := 0
 
 MouseSpeed := 0.001  ; Adjust this value to change the mouse speed
 
+SpaceOn := 0
 Loop {
     State := Controller.Get()
 
@@ -64,11 +65,15 @@ Loop {
         Send "{d Down}"
     else if GetKeyState("d")=1
         Send "{d Up}"
-
-    if State.AKey
+    
+    if State.AKey{
+        SpaceOn := 1
         Send "{Space Down}"
-    else if GetKeyState("Space")=1
+    } else if GetKeyState("Space")=1 && SpaceOn {
         Send "{Space Up}"
+        SpaceOn := 0
+    }
+
     if State.YKey && YOn = 0 {
         YOn := 1
         Send 'e'

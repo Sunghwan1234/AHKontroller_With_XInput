@@ -1,35 +1,38 @@
-Welcome to AHKontroller (With XInput)!
+# Welcome to AHKontroller (With XInput)!
 This is a utility & usables repo with many cool things!
 
-Utilities
-XInputTester (XIT) : Advanced Controller tester (With XInput)!
+## Utilities
+### XInputTester (XIT) : Advanced Controller tester (With XInput)!
  - Full GUI With every XI key & Sticks with Drift!
  - Detection of new & disconnected controllers
  - This is just XIGUI btw
-JoyToMouse (JTM) : Control your mouse using XIController.
+
+### JoyToMouse (JTM) : Control your mouse using XIController.
  - Sensitivity Control (inside the code for now)
  - Scrolling with Left Stick
  - Left Click with Right Shoulder & Bumper
  - Right Click with Left Bumper & A Key (Some controllers have buttons on the back)
  - Some deadzone control but will be updated LATER
-JoyToMinecraft (JTMC) : Convert Controller Input to Keyboard Input + Mouse!
+ 
+### JoyToMinecraft (JTMC) : Convert Controller Input to Keyboard Input + Mouse!
  - More info on the file, is mainly for EaglerCraft where Sprint is R.
  - A to Jump, B to Shift. Y for Inventory. More inside the file!
 
-XICMap Fun!
-JoyToMinecraftvXICMap : JTMC using XICMap. Has a bit more features!
+## XICMap Fun!
+### JoyToMinecraftvXICMap : JTMC using XICMap. Has a bit more features!
  - More info in the file.
 ioGame : Play mouse-based io games i guess lol
 
-Libraries!!!
-XIController (XIC) : Easy Controller management with one class!
+## Libraries!!!
+### XIController (XIC) : Easy Controller management with one class!
  - Function to auto find first controller: FindController()
  - Use XInput Indexes to create: XIController(FindController())
  - Use Get() to get an object with many keys: joy.Get().KeyA
-XIControllerB (XICB) : Easy Controller management, WITHOUT the class!
+### XIControllerB (XICB) : Easy Controller management, WITHOUT the class!
  - All functions changed to require an id.
-XIGUI : XInputTester using XIController. Im new to these types of libraries so please excuse my terrible code
-XICMap : Easy Controller Mapping to keyboard & mouse.
+### XIGUI : XInputTester using XIController.
+ - Im new to these types of libraries so please excuse my terrible code
+### XICMap : Easy Controller Mapping to keyboard & mouse.
  - Easily make mappings in-code.
  - Highly WIP. Star for updates!
 
